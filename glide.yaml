@@ -1,0 +1,9 @@
+package: git.trivago.trv/kbenevento/jira-info-board
+import:
+- package: golang.org/x/oauth2
+- package: github.com/spf13/viper
+  version: ^1.2.1
+- package: github.com/fatih/color
+  version: ^1.7.0
+- package: github.com/zalando/go-keyring
+- package: golang.org/x/crypto

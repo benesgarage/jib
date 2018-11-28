@@ -1,0 +1,31 @@
+hash: 9a05ce8adaa128d2def108a419cf55454170b3c0f786f0f43dedb2126844808f
+updated: 2018-11-23T23:50:33.188988+01:00
+imports:
+- name: github.com/danieljoos/wincred
+  version: 1dcb5a2463cd2b67210264eaa0eb356c801cf59e
+- name: github.com/fatih/color
+  version: 5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4
+- name: github.com/godbus/dbus
+  version: 2ff6f7ffd60f0f2410b3105864bdd12c7894f844
+- name: github.com/mattn/go-colorable
+  version: efa589957cd060542a26d2dd7832fd6a6c6c3ade
+- name: github.com/mattn/go-isatty
+  version: 3fb116b820352b7f0c281308a4d6250c22d94e27
+- name: github.com/spf13/viper
+  version: 2c12c60302a5a0e62ee102ca9bc996277c2f64f5
+- name: github.com/zalando/go-keyring
+  version: 6d81c293b3fbc8a9b1bcf4bc9c167c2e1d1f52cf
+  subpackages:
+  - secret_service
+- name: golang.org/x/crypto
+  version: 3d3f9f413869b949e48070b5bc593aa22cc2b8f2
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/oauth2
+  version: 8f65e3013ebad444f13bc19536f7865efc793816
+- name: golang.org/x/sys
+  version: 62eef0e2fa9b2c385f7b2778e763486da6880d37
+  subpackages:
+  - unix
+  - windows
+testImports: []
