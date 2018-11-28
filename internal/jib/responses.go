@@ -1,4 +1,4 @@
-package internal
+package jib
 
 type SummaryResponse struct {
 	Expand string

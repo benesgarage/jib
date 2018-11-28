@@ -3,7 +3,7 @@ package main
 import "C"
 import (
 	"flag"
-	"github.com/benesgarage/jib/internal"
+	"github.com/benesgarage/jib/internal/jib"
 )
 
 func main() {
@@ -12,9 +12,9 @@ func main() {
 
 	switch true {
 	case *i:
-		internal.AddInstance()
+		jib.AddInstance()
 		break
 	default:
-		internal.TaskSummary()
+		jib.TaskSummary()
 	}
 }

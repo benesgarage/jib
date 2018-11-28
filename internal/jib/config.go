@@ -1,19 +1,19 @@
-package internal
+package jib
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
-	"encoding/json"
 	"path/filepath"
 	"regexp"
 	"runtime"
 	"time"
-	"fmt"
 )
 
 var (
 	_, b, _, _ = runtime.Caller(0)
-	basepath   = filepath.Dir(b)+"/.."
+	basepath   = filepath.Dir(b)+"/../.."
 )
 
 type Config struct {

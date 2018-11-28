@@ -1,11 +1,11 @@
-package internal
+package jib
 
 import (
-	"os"
-	"fmt"
 	"bufio"
-	"strings"
+	"fmt"
+	"os"
 	"regexp"
+	"strings"
 )
 
 func GetBranchTaskNumber(branch string) (taskNumber string){
