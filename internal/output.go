@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func outputTaskSummary(summaryResponse summaryResponse)  {
+func OutputTaskSummary(summaryResponse SummaryResponse)  {
 	fmt.Println(summaryResponse.Fields.Summary)
 	fmt.Println(strings.Repeat("=", len(summaryResponse.Fields.Summary)))
 	var col = color.New()

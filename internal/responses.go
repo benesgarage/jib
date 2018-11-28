@@ -1,6 +1,6 @@
-package main
+package internal
 
-type summaryResponse struct {
+type SummaryResponse struct {
 	Expand string
 	ID string
 	Self string

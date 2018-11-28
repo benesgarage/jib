@@ -1,55 +1,33 @@
-package main
+package internal
 
-import "C"
 import (
 	"encoding/base64"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/zalando/go-keyring"
 	"net/http"
 	"os"
-	"path/filepath"
-	"runtime"
 )
 
-var (
-	_, b, _, _ = runtime.Caller(0)
-	basepath   = filepath.Dir(b)
-)
-
-func main() {
-	i := flag.Bool("i", false, "Add a new JIRA instance")
-	flag.Parse()
-
-	switch true {
-	case *i:
-		addInstance()
-		break
-	default:
-		taskSummary()
-	}
-}
-
-func taskSummary() {
+func TaskSummary() {
 	taskNumber 		:= extractTaskNumber()
 	instance   		:= determineInstance(taskNumber)
 	summaryResponse := getTaskSummary(instance, taskNumber)
 
-	outputTaskSummary(summaryResponse)
+	OutputTaskSummary(summaryResponse)
 }
 
 
 func extractTaskNumber() (taskNumber string) {
-	branch := getBranch()
-	taskNumber = getBranchTaskNumber(branch)
+	branch := GetBranch()
+	taskNumber = GetBranchTaskNumber(branch)
 
 	return taskNumber
 }
 
 func determineInstance(taskNumber string) Instance {
-	config, err := loadConfigs(basepath+"/config/config.json")
-	instance, err := getInstance(taskNumber, config)
+	config, err := LoadConfigs(basepath+"/config/config.json")
+	instance, err := GetInstance(taskNumber, config)
 
 	if nil != err {
 		fmt.Println(err)
@@ -59,7 +37,7 @@ func determineInstance(taskNumber string) Instance {
 	return instance
 }
 
-func getTaskSummary(instance Instance, taskNumber string) (responseContent summaryResponse) {
+func getTaskSummary(instance Instance, taskNumber string) (responseContent SummaryResponse) {
 
 	issueUri := instance.Host+"/rest/api/latest/issue/"+taskNumber
 

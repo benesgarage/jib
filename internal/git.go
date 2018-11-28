@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-func getBranchTaskNumber(branch string) (taskNumber string){
+func GetBranchTaskNumber(branch string) (taskNumber string){
 	parts := strings.Split(branch, "/")
 	reg := regexp.MustCompile("[a-zA-Z]+[-]?[0-9]+")
 	taskNumber = reg.FindString(parts[1])
@@ -16,7 +16,7 @@ func getBranchTaskNumber(branch string) (taskNumber string){
 	return taskNumber
 }
 
-func getBranch() (branch string){
+func GetBranch() (branch string){
 	dir, err := os.Getwd()
 	if nil != err {
 		return branch

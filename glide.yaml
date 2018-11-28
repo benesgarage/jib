@@ -1,4 +1,4 @@
-package: git.trivago.trv/kbenevento/jira-info-board
+package: github.com/benesgarage/jib
 import:
 - package: golang.org/x/oauth2
 - package: github.com/spf13/viper

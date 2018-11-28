@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func addInstance () () {
+func AddInstance () () {
 
 	origin := getOrigin()
 
@@ -26,7 +26,7 @@ func addInstance () () {
 	password := requestPassword()
 	project  := requestProject()
 
-	config, err := loadConfigs(basepath+"/config/config.json")
+	config, err := LoadConfigs(basepath+"/config/config.json")
 
 	if nil != err {
 		fmt.Println(err)
@@ -45,7 +45,7 @@ func addInstance () () {
 		},
 	})
 
-	saveConfig(basepath+"/config/config.json", config)
+	SaveConfig(basepath+"/config/config.json", config)
 
 	err = keyring.Set(host, username, string(password))
 }
@@ -120,7 +120,7 @@ func getOrigin() string {
 }
 
 func checkOriginExists(repository string) bool {
-	config, err := loadConfigs(basepath+"/config/config.json")
+	config, err := LoadConfigs(basepath+"/config/config.json")
 
 	if nil != err {
 		fmt.Println(err)

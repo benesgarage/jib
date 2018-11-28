@@ -1,12 +1,19 @@
-package main
+package internal
 
 import (
 	"io/ioutil"
 	"os"
 	"encoding/json"
+	"path/filepath"
 	"regexp"
+	"runtime"
 	"time"
 	"fmt"
+)
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basepath   = filepath.Dir(b)+"/.."
 )
 
 type Config struct {
@@ -34,7 +41,7 @@ func (e UnconfiguredInstanceError) Error() string  {
 	return e.What
 }
 
-func loadConfigs(filename string) (Config, error) {
+func LoadConfigs(filename string) (Config, error) {
 	var config Config
 	configFile, err := os.Open(filename)
 	defer configFile.Close()
@@ -47,12 +54,12 @@ func loadConfigs(filename string) (Config, error) {
 	return config, err
 }
 
-func saveConfig(filename string, config Config) {
+func SaveConfig(filename string, config Config) {
 	configJson, _ := json.Marshal(config)
 	_ = ioutil.WriteFile(filename, configJson, 0644)
 }
 
-func getInstance(TaskNumber string, config Config) (instance Instance, err error) {
+func GetInstance(TaskNumber string, config Config) (instance Instance, err error) {
 	reg := regexp.MustCompile("[a-zA-Z]+")
 	prefix := reg.FindString(TaskNumber)
 	for _, instance := range config.Instances {
