@@ -1,73 +1,84 @@
 package jib
 
 import (
+	"bufio"
 	"fmt"
-	"github.com/zalando/go-keyring"
 	"golang.org/x/crypto/ssh/terminal"
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
-func AddInstance () () {
-
-	origin := getOrigin()
-
-	if checkOriginExists(origin) {
-		//TODO: Ask if wants to edit
-		fmt.Println("Instance for this repo is already linked! Sorry, edits are not implemented yet :(")
-		os.Exit(1)
+func askForConfirmation() bool {
+	var response string
+	_, err := fmt.Scanln(&response)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	host 	 := requestHost()
-	port 	 := requestPort()
-	username := requestUsername()
-	password := requestPassword()
-	project  := requestProject()
-
-	config, err := LoadConfigs(basepath+"/config/config.json")
-
-	if nil != err {
-		fmt.Println(err)
-		os.Exit(1)
+	okayResponses := []string{"y", "Y", "yes", "Yes", "YES"}
+	nokayResponses := []string{"n", "N", "no", "No", "NO"}
+	if containsString(okayResponses, response) {
+		return true
+	} else if containsString(nokayResponses, response) {
+		return false
+	} else {
+		fmt.Println("Please type yes or no and then press enter:")
+		return askForConfirmation()
 	}
-
-	config.Instances = append(config.Instances, Instance{
-		Origin: origin,
-		Host: host,
-		Port: port,
-		Username: username,
-		Projects: []Project{
-			{
-				Prefix:project,
-			},
-		},
-	})
-
-	SaveConfig(basepath+"/config/config.json", config)
-
-	err = keyring.Set(host, username, string(password))
 }
 
 func requestHost() (host string) {
-	fmt.Print("Host: ")
-	if    _, err := fmt.Scan(&host);    err != nil {
-		log.Print("  Scan for host failed, due to ", err)
-		return
-	}
+	for {
 
-	return host
+		fmt.Print("Host: ")
+
+		scanner := bufio.NewScanner(os.Stdin)
+
+		scanner.Scan()
+		host = scanner.Text()
+
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Error reading from input: ", err)
+		}
+
+		if len(host) != 0 {
+			return host
+		}
+
+		fmt.Println("Can not insert empty host parameter. Please insert a valid host.")
+	}
 }
 
 func requestPort() (port int) {
-	fmt.Print("Port [80]: ")
-	if    _, err := fmt.Scan(&port);    err != nil {
-		log.Print("  Scan for port failed, due to ", err)
-		return
-	}
+	for {
 
-	return port
+		fmt.Print("Port[80]: ")
+
+		scanner := bufio.NewScanner(os.Stdin)
+
+		scanner.Scan()
+		out := scanner.Text()
+
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Error reading from input: ", err)
+			os.Exit(1)
+		}
+
+		if len(out) != 0 {
+			var err error
+
+			if port, err = strconv.Atoi(out); err != nil {
+				fmt.Println("Invalid port. Please input a valid integer.")
+				continue
+			}
+		} else {
+			port = 80
+		}
+
+		return port
+	}
 }
 
 func requestUsername() (username string) {
