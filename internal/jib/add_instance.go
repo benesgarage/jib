@@ -23,6 +23,7 @@ func AddInstance () () {
 	username := requestUsername()
 	password := requestPassword()
 	project  := requestProject()
+	mainBranch := requestMainBranch()
 
 	config, err := LoadConfigs(basepath+"/config/config.json")
 
@@ -36,11 +37,12 @@ func AddInstance () () {
 		Host: host,
 		Port: port,
 		Username: username,
-		Projects: []Project{
+		Projects: [] Project {
 			{
 				Prefix:project,
 			},
 		},
+		MainBranch: mainBranch,
 	})
 
 	SaveConfig(basepath+"/config/config.json", config)
