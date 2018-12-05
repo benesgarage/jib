@@ -115,6 +115,27 @@ func requestProject() (project string) {
 	return project
 }
 
+func requestMainBranch() (mainBranch string) {
+	defaultBranch := "master"
+
+	fmt.Print("Main branch["+defaultBranch+"]: ")
+
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+
+	if nil != err {
+		log.Print("  Scan for host failed, due to ", err)
+		os.Exit(1)
+	}
+	mainBranch = strings.Trim(strings.Replace(input, "\n", "", -1), " ")
+
+	if len(mainBranch) == 0 {
+		mainBranch = defaultBranch
+	}
+
+	return mainBranch
+}
+
 func getOrigin() string {
 	wd, err := os.Getwd()
 	if nil != err {

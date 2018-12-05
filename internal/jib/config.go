@@ -26,6 +26,7 @@ type Instance struct {
 	Port int
 	Username string
 	Projects []Project
+	MainBranch string
 }
 
 type Project struct {
