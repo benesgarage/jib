@@ -105,16 +105,6 @@ func requestPassword() string {
 	return string(password)
 }
 
-func requestProject() (project string) {
-	fmt.Print("Enter project issue prefix (Example: INV, OIO, TACO): ")
-	if    _, err := fmt.Scan(&project);    err != nil {
-		log.Print("  Scan for host failed, due to ", err)
-		return
-	}
-
-	return project
-}
-
 func requestMainBranch() (mainBranch string) {
 	defaultBranch := "master"
 

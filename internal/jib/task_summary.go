@@ -10,9 +10,8 @@ import (
 )
 
 func TaskSummary() {
-	taskNumber 		:= extractTaskNumber()
-	instance   		:= determineInstance(taskNumber)
-	summaryResponse := getTaskSummary(instance, taskNumber)
+	instance   		:= determineInstance(getOrigin())
+	summaryResponse := getTaskSummary(instance, extractTaskNumber())
 
 	OutputTaskSummary(summaryResponse)
 }
@@ -25,9 +24,9 @@ func extractTaskNumber() (taskNumber string) {
 	return taskNumber
 }
 
-func determineInstance(taskNumber string) Instance {
+func determineInstance(origin string) Instance {
 	config, err := LoadConfigs(basepath+"/config/config.json")
-	instance, err := GetInstance(taskNumber, config)
+	instance, err := GetInstance(origin, config)
 
 	if nil != err {
 		fmt.Println(err)
