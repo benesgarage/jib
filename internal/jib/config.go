@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"regexp"
 	"runtime"
 	"time"
 )
@@ -25,12 +24,7 @@ type Instance struct {
 	Host string
 	Port int
 	Username string
-	Projects []Project
 	MainBranch string
-}
-
-type Project struct {
-	Prefix string
 }
 
 type UnconfiguredInstanceError struct {
@@ -60,20 +54,16 @@ func SaveConfig(filename string, config Config) {
 	_ = ioutil.WriteFile(filename, configJson, 0644)
 }
 
-func GetInstance(TaskNumber string, config Config) (instance Instance, err error) {
-	reg := regexp.MustCompile("[a-zA-Z]+")
-	prefix := reg.FindString(TaskNumber)
+func GetInstance(origin string, config Config) (instance Instance, err error) {
 	for _, instance := range config.Instances {
-		for _, project := range instance.Projects {
-			if prefix == project.Prefix {
-				return instance, err
-			}
+		if origin == instance.Origin {
+			return instance, err
 		}
 	}
 
 	err = UnconfiguredInstanceError{
 		time.Now(),
-		fmt.Sprintf("No JIRA instance configured for task %s", TaskNumber),
+		fmt.Sprintf("No JIRA instance configured for origin %s", origin),
 	}
 
 	return instance, err
