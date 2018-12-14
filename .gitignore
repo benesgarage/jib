@@ -3,3 +3,4 @@
 .DS_Store
 *.swp
 /config/config.json
+/cmd/jib/bin/*
