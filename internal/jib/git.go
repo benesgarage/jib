@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -34,4 +35,19 @@ func GetBranch() (branch string){
 	scanner.Scan()
 	branch = scanner.Text()
 	return branch[16:]
+}
+
+func getOrigin() string {
+	wd, err := os.Getwd()
+	if nil != err {
+		fmt.Println(err)
+	}
+	out, err := exec.Command("git", "-C", wd, "config", "--get", "remote.origin.url").Output()
+	origin := strings.TrimSuffix(string(out), "\n")
+
+	if nil != err {
+		fmt.Println(err)
+	}
+
+	return string(origin)
 }
