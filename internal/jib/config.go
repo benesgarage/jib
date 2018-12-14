@@ -36,7 +36,7 @@ func (e UnconfiguredInstanceError) Error() string  {
 	return e.What
 }
 
-func LoadConfigs(filename string) (Config, error) {
+func LoadConfig(filename string) (Config, error) {
 	var config Config
 	configFile, err := os.Open(filename)
 	defer configFile.Close()
@@ -77,4 +77,15 @@ func (config *Config) SetInstance (newInstance Instance) {
 		}
 	}
 	config.Instances = append(config.Instances, newInstance)
+}
+
+func (config Config) checkOriginExists (origin string) bool {
+	for _, instance := range config.Instances {
+		if origin == instance.Origin {
+
+			return true
+		}
+	}
+
+	return false
 }

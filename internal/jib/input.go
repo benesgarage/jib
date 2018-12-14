@@ -6,7 +6,6 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"log"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -124,37 +123,4 @@ func requestMainBranch() (mainBranch string) {
 	}
 
 	return mainBranch
-}
-
-func getOrigin() string {
-	wd, err := os.Getwd()
-	if nil != err {
-		fmt.Println(err)
-	}
-	out, err := exec.Command("git", "-C", wd, "config", "--get", "remote.origin.url").Output()
-	origin := strings.TrimSuffix(string(out), "\n")
-
-	if nil != err {
-		fmt.Println(err)
-	}
-
-	return string(origin)
-}
-
-func checkOriginExists(repository string) bool {
-	config, err := LoadConfigs(basepath+"/config/config.json")
-
-	if nil != err {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	for _, instance := range config.Instances {
-		if repository == instance.Origin {
-
-			return true
-		}
-	}
-
-	return false
 }
