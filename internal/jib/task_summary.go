@@ -26,7 +26,7 @@ func extractTaskNumber() (taskNumber string) {
 
 func determineInstance(origin string) Instance {
 	config, err := LoadConfigs(basepath+"/config/config.json")
-	instance, err := GetInstance(origin, config)
+	instance, err := config.GetInstance(origin)
 
 	if nil != err {
 		fmt.Println(err)

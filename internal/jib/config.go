@@ -49,12 +49,12 @@ func LoadConfigs(filename string) (Config, error) {
 	return config, err
 }
 
-func SaveConfig(filename string, config Config) {
+func (config Config) Persist(filename string) {
 	configJson, _ := json.Marshal(config)
 	_ = ioutil.WriteFile(filename, configJson, 0644)
 }
 
-func GetInstance(origin string, config Config) (instance Instance, err error) {
+func (config Config) GetInstance(origin string) (instance Instance, err error) {
 	for _, instance := range config.Instances {
 		if origin == instance.Origin {
 			return instance, err
@@ -67,4 +67,14 @@ func GetInstance(origin string, config Config) (instance Instance, err error) {
 	}
 
 	return instance, err
+}
+
+func (config *Config) SetInstance (newInstance Instance) {
+	for index, instance := range config.Instances {
+		if newInstance.Origin == instance.Origin {
+			config.Instances[index] = newInstance
+			return
+		}
+	}
+	config.Instances = append(config.Instances, newInstance)
 }
