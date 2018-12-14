@@ -31,7 +31,7 @@ func AddInstance () () {
 		os.Exit(1)
 	}
 
-	config.Instances = append(config.Instances, Instance{
+	config.SetInstance(Instance{
 		Origin: origin,
 		Host: host,
 		Port: port,
@@ -39,7 +39,7 @@ func AddInstance () () {
 		MainBranch: mainBranch,
 	})
 
-	SaveConfig(basepath+"/config/config.json", config)
+	config.Persist(basepath+"/config/config.json")
 
 	err = keyring.Set(host, username, string(password))
 }
