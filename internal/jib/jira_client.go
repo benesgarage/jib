@@ -9,42 +9,72 @@ import (
 	"os"
 )
 
-type JiraClient struct {
-	Instance Instance
-	httpClient http.Client
-}
+func GetSummary (core Core) (summary Summary) {
 
-func (client JiraClient) GetTaskSummary (taskNumber string) (responseContent SummaryResponse) {
-	issueURI := client.Instance.Host+"/rest/api/latest/issue/"+taskNumber
+	issueURI := core.Instance.Host+"/rest/api/latest/issue/"+core.TaskNumber
 
-	req, _ := http.NewRequest( "GET", issueURI, nil)
-
-	password, err := keyring.Get(client.Instance.Host, client.Instance.Username)
+	req, err   := http.NewRequest( "GET", issueURI, nil)
 
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	req.Header.Add("Authorization", "Basic " + basicAuth(client.Instance.Username, password))
-	req.Header.Add("Content-Type", "application/json")
+	response := doJiraRequest(core.Instance, req)
+	jsonParser := json.NewDecoder(response.Body)
+	decoderErr := jsonParser.Decode(&summary)
 
-	resp, _ := client.httpClient.Do(req)
+	if nil != decoderErr {
+		fmt.Println(decoderErr)
+		os.Exit(1)
+	}
+
+	return summary
+}
+
+func GetCommentSection (core Core) (commentSection CommentSection) {
+	issueURI := core.Instance.Host+"/rest/api/latest/issue/"+core.TaskNumber+"/comment"
+
+	req, err := http.NewRequest( "GET", issueURI, nil)
 
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	jsonParser := json.NewDecoder(resp.Body)
+	response := doJiraRequest(core.Instance, req)
+	jsonParser := json.NewDecoder(response.Body)
+	decoderErr := jsonParser.Decode(&commentSection)
 
-	err = jsonParser.Decode(&responseContent)
+	if nil != decoderErr {
+		fmt.Println(decoderErr)
+		os.Exit(1)
+	}
 
-	return responseContent
+	return commentSection
 }
 
-func NewJiraClient(instance Instance) *JiraClient {
-	return &JiraClient{instance, http.Client{CheckRedirect: redirectPolicyFunc}}
+func doJiraRequest (instance Instance, request *http.Request) (response *http.Response) {
+	password, err := keyring.Get(instance.Host, instance.Username)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	request.Header.Add("Authorization", "Basic " + basicAuth(instance.Username, password))
+	request.Header.Add("Content-Type", "application/json")
+
+	client := http.Client{CheckRedirect:redirectPolicyFunc}
+
+	response, httpErr := client.Do(request)
+
+	if nil != httpErr {
+		fmt.Println(httpErr)
+		os.Exit(1)
+	}
+
+	return response
 }
 
 func redirectPolicyFunc(req *http.Request, via []*http.Request) error{

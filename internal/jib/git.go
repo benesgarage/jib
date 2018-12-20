@@ -37,7 +37,7 @@ func GetBranch() (branch string){
 	return branch[16:]
 }
 
-func getOrigin() string {
+func GetOrigin() string {
 	wd, err := os.Getwd()
 	if nil != err {
 		fmt.Println(err)
@@ -50,4 +50,11 @@ func getOrigin() string {
 	}
 
 	return string(origin)
+}
+
+func ExtractTaskNumber() (taskNumber string) {
+	branch := GetBranch()
+	taskNumber = GetBranchTaskNumber(branch)
+
+	return taskNumber
 }
