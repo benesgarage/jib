@@ -7,3 +7,4 @@ import:
   version: ^1.7.0
 - package: github.com/zalando/go-keyring
 - package: golang.org/x/crypto
+- package: github.com/logrusorgru/aurora
