@@ -10,9 +10,13 @@ import (
 )
 
 func GetBranchTaskNumber(branch string) (taskNumber string){
-	parts := strings.Split(branch, "/")
 	reg := regexp.MustCompile("[a-zA-Z]+[-]?[0-9]+")
-	taskNumber = reg.FindString(parts[1])
+	taskNumber = reg.FindString(branch)
+
+	if taskNumber == "" {
+		fmt.Println("Could not find a task number within the current branch name.")
+		os.Exit(1)
+	}
 
 	return taskNumber
 }
