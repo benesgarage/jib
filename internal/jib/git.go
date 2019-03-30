@@ -4,10 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 	"regexp"
-	"strings"
+	"time"
 )
+
+type RemoteNotFoundError struct {
+	When time.Time
+	What string
+}
+
+func (e RemoteNotFoundError) Error() string  {
+	return e.What
+}
 
 func GetBranchTaskNumber(branch string) (taskNumber string){
 	reg := regexp.MustCompile("[a-zA-Z]+[-]?[0-9]+")
@@ -39,21 +47,6 @@ func GetBranch() (branch string){
 	scanner.Scan()
 	branch = scanner.Text()
 	return branch[16:]
-}
-
-func GetOrigin() string {
-	wd, err := os.Getwd()
-	if nil != err {
-		fmt.Println(err)
-	}
-	out, err := exec.Command("git", "-C", wd, "config", "--get", "remote.origin.url").Output()
-	origin := strings.TrimSuffix(string(out), "\n")
-
-	if nil != err {
-		fmt.Println(err)
-	}
-
-	return string(origin)
 }
 
 func ExtractTaskNumber() (taskNumber string) {

@@ -2,18 +2,28 @@
 
 
 [[projects]]
-  digest = "1:675c7e2e645d40363350159cfe1f719f61ce353a3859db939ca686d98aa85f16"
+  digest = "1:586992e81213a853bfe5c102709c0c92020d21b386907ceae783f13bbe899ad7"
   name = "github.com/danieljoos/wincred"
   packages = ["."]
   pruneopts = "UT"
-  revision = "1dcb5a2463cd2b67210264eaa0eb356c801cf59e"
+  revision = "412b574fb496839b312a75fba146bd32a89001cf"
+  version = "v1.0.1"
 
 [[projects]]
-  digest = "1:7218f6ae6598d27eb7efadf065aec2f0e1af4ae7493f922e64f80e22f09cfb4c"
+  digest = "1:b3d20bcdedab2050e6bc58e52f4fdc46f710b4c74e1a1ecee262ebec1aee7b6e"
   name = "github.com/godbus/dbus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "e25f905dbfbcdbc1fe19a684d9fe2a1261383ef8"
+  revision = "2ff6f7ffd60f0f2410b3105864bdd12c7894f844"
+  version = "v5.0.1"
+
+[[projects]]
+  digest = "1:9565826757d815638581d6e3a2704b64400928ef9cba84c3cb21b2dc93eca4d5"
+  name = "github.com/google/subcommands"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d47216cd17848d55a33e6f651cbe408243ed55b8"
+  version = "1.0.1"
 
 [[projects]]
   branch = "master"
@@ -24,37 +34,50 @@
   revision = "a7b3b318ed4e1ae5b80602b08627267303c68572"
 
 [[projects]]
-  digest = "1:a013f6b28d909956020c54738137d9c62a548c6fc6764e25256ec2b73e75099f"
+  digest = "1:95741de3af260a92cc5c7f3f3061e85273f5a81b5db20d4bd68da74bd521675e"
+  name = "github.com/pelletier/go-toml"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c01d1270ff3e442a8a57cddc1c92dc1138598194"
+  version = "v1.2.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:e478e54fd61650aed90ae907c222982535859c00626c135a37a2d530da758eb7"
   name = "github.com/zalando/go-keyring"
   packages = [
     ".",
     "secret_service",
   ]
   pruneopts = "UT"
-  revision = "6d81c293b3fbc8a9b1bcf4bc9c167c2e1d1f52cf"
+  revision = "fbe81aec3a07e14c2f0a201288c909832ebaae4f"
 
 [[projects]]
-  digest = "1:38f553aff0273ad6f367cb0a0f8b6eecbaef8dc6cb8b50e57b6a81c1d5b1e332"
+  branch = "master"
+  digest = "1:bbe51412d9915d64ffaa96b51d409e070665efc5194fcf145c4a27d4133107a4"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
   pruneopts = "UT"
-  revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
+  revision = "a5d413f7728c81fb97d96a2b722368945f651e78"
 
 [[projects]]
-  digest = "1:ba8cbf57cfd92d5f8592b4aca1a35d92c162363d32aeabd5b12555f8896635e7"
+  branch = "master"
+  digest = "1:f6321364014431568a59b49b449d6ae60c017f3afa3f4ab787a5636853b16b1e"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "074acd46bca67915925527c07849494d115e7c43"
+  revision = "9eb1bfa1ce65ae8a6ff3114b0aaf9a41a6cf3560"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/google/subcommands",
     "github.com/logrusorgru/aurora",
+    "github.com/pelletier/go-toml",
     "github.com/zalando/go-keyring",
     "golang.org/x/crypto/ssh/terminal",
   ]

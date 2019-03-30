@@ -1,11 +1,22 @@
 package jib
 
 import (
-	"encoding/json"
+	"bufio"
 	"fmt"
+	"github.com/pelletier/go-toml"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"runtime"
 	"time"
+)
+
+var (
+	_, b, _, _  = runtime.Caller(0)
+	basepath    = filepath.Dir(b)+"/../.."
+	configRoute = basepath+"/config/"
+	filename 	= "config.toml"
+	jibConfig Config
 )
 
 type Config struct {
@@ -13,9 +24,9 @@ type Config struct {
 }
 
 type Instance struct {
-	Origin string
+	Location string
 	Host string
-	Port int
+	Port uint16
 	Username string
 	MainBranch string
 }
@@ -29,42 +40,55 @@ func (e UnconfiguredInstanceError) Error() string  {
 	return e.What
 }
 
-func LoadConfig(filename string) (Config, error) {
-	var config Config
-	configFile, err := os.Open(filename)
-	defer configFile.Close()
+func initConfig() {
+	file, err := os.Open(configRoute+filename)
 	if nil != err {
-		return config, err
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
-	jsonParser := json.NewDecoder(configFile)
-	err = jsonParser.Decode(&config)
 
-	return config, err
+	decoder := toml.NewDecoder(bufio.NewReader(file))
+
+	if err := decoder.Decode(&jibConfig); nil != err {
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
 }
 
-func (config Config) Persist(filename string) {
-	configJson, _ := json.Marshal(config)
-	_ = ioutil.WriteFile(filename, configJson, 0644)
+func (config Config) toTOML() string {
+	configToml, err := toml.Marshal(config)
+	if nil != err {
+		panic(fmt.Errorf("Fatal error marshalling configuration struct: %s \n", err))
+	}
+	return string(configToml)
 }
 
-func (config Config) GetInstance(origin string) (instance Instance, err error) {
+func (config Config) persist() {
+	configToml, err := toml.Marshal(config)
+	if nil != err {
+		panic(fmt.Errorf("Fatal error marshalling configuration struct: %s \n", err))
+	}
+	if err := ioutil.WriteFile(configRoute+filename, configToml, 0644); nil != err {
+		panic(fmt.Errorf("Fatal error writing configuration file: %s \n", err))
+	}
+}
+
+func (config Config) GetInstance(wd string) (instance Instance, err error) {
 	for _, instance := range config.Instances {
-		if origin == instance.Origin {
+		if wd == instance.Location {
 			return instance, err
 		}
 	}
 
 	err = UnconfiguredInstanceError{
 		time.Now(),
-		fmt.Sprintf("No JIRA instance configured for origin %s", origin),
+		fmt.Sprintf("No instance configured for working directory %s", wd),
 	}
 
 	return instance, err
 }
 
-func (config *Config) SetInstance (newInstance Instance) {
+func (config *Config) setInstance (newInstance Instance) {
 	for index, instance := range config.Instances {
-		if newInstance.Origin == instance.Origin {
+		if newInstance.Location == instance.Location {
 			config.Instances[index] = newInstance
 			return
 		}
@@ -72,9 +96,18 @@ func (config *Config) SetInstance (newInstance Instance) {
 	config.Instances = append(config.Instances, newInstance)
 }
 
-func (config Config) checkOriginExists (origin string) bool {
+func (config *Config) removeInstance (wd string) {
+	for index, instance := range config.Instances {
+		if wd == instance.Location {
+			config.Instances = append(config.Instances[:index], config.Instances[index+1:]...)
+			return
+		}
+	}
+}
+
+func (config Config) checkWorkingDirExists (workingDir string) bool {
 	for _, instance := range config.Instances {
-		if origin == instance.Origin {
+		if workingDir == instance.Location {
 
 			return true
 		}

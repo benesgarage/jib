@@ -2,34 +2,42 @@ package main
 
 import "C"
 import (
-	"bufio"
+	"context"
 	"flag"
-	"fmt"
 	"github.com/benesgarage/jib/internal/jib"
+	"github.com/google/subcommands"
 	"os"
 )
 
 func main() {
-	i := flag.Bool("i", false, "Add a new JIRA instance")
-	c := flag.Bool("c", false, "Show task comments")
+	subcommands.Register(jib.NewSetup(), "")
+	//i := flag.Bool("i", false, "Add a new JIRA instance")
+	//c := flag.Bool("c", false, "Show task comments")
+	//b := flag.String("b", "", "Create branch from task number")
 	flag.Parse()
 
-	if *i { jib.AddInstance() }
+	ctx := context.Background()
 
-	core := jib.NewCore()
-	writer := bufio.NewWriter(os.Stdout)
-
-	jib.GetSummary(*core).OutputToTerminal(writer)
-
-	switch true {
-	case *c:
-		jib.GetCommentSection(*core).OutputToTerminal(writer)
-	}
-
-	err := writer.Flush()
-
-	if nil != err {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	os.Exit(int(subcommands.Execute(ctx)))
+	//core := jib.NewCore()
+	//writer := bufio.NewWriter(os.Stdout)
+	//
+	//
+	//summary := jib.GetSummary(*core)
+	//if *b != "" {
+	//	jib.CreateBranchFromSummary(*core, summary)
+	//}
+	//summary.OutputToTerminal(writer)
+	//
+	//switch true {
+	//case *c:
+	//	jib.GetCommentSection(*core).OutputToTerminal(writer)
+	//}
+	//
+	//err := writer.Flush()
+	//
+	//if nil != err {
+	//	fmt.Println(err)
+	//	os.Exit(1)
+	//}
 }
