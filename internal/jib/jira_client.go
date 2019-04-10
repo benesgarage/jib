@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-func GetSummary (core Core) (summary Summary) {
+func GetIssue (instance Instance, issueIdentifier string) (summary Issue) {
 
-	issueURI := core.Instance.Host+"/rest/api/latest/issue/"+core.TaskNumber
+	issueURI := instance.Host+"/rest/api/latest/issue/"+issueIdentifier
 
 	req, err   := http.NewRequest( "GET", issueURI, nil)
 
@@ -20,7 +20,7 @@ func GetSummary (core Core) (summary Summary) {
 		os.Exit(1)
 	}
 
-	response := doJiraRequest(core.Instance, req)
+	response := doJiraRequest(instance, req)
 	jsonParser := json.NewDecoder(response.Body)
 	decoderErr := jsonParser.Decode(&summary)
 
@@ -32,8 +32,8 @@ func GetSummary (core Core) (summary Summary) {
 	return summary
 }
 
-func GetCommentSection (core Core) (commentSection CommentSection) {
-	issueURI := core.Instance.Host+"/rest/api/latest/issue/"+core.TaskNumber+"/comment"
+func GetCommentSection (instance Instance, issueIdentifier string) (commentSection CommentSection) {
+	issueURI := instance.Host+"/rest/api/latest/issue/"+issueIdentifier+"/comment"
 
 	req, err := http.NewRequest( "GET", issueURI, nil)
 
@@ -42,7 +42,7 @@ func GetCommentSection (core Core) (commentSection CommentSection) {
 		os.Exit(1)
 	}
 
-	response := doJiraRequest(core.Instance, req)
+	response := doJiraRequest(instance, req)
 	jsonParser := json.NewDecoder(response.Body)
 	decoderErr := jsonParser.Decode(&commentSection)
 

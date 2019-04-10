@@ -11,6 +11,7 @@ import (
 
 func main() {
 	subcommands.Register(jib.NewSetup(), "")
+	subcommands.Register(jib.NewStatus(), "")
 	//i := flag.Bool("i", false, "Add a new JIRA instance")
 	//c := flag.Bool("c", false, "Show task comments")
 	//b := flag.String("b", "", "Create branch from task number")

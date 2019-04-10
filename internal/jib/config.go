@@ -6,17 +6,7 @@ import (
 	"github.com/pelletier/go-toml"
 	"io/ioutil"
 	"os"
-	"path/filepath"
-	"runtime"
 	"time"
-)
-
-var (
-	_, b, _, _  = runtime.Caller(0)
-	basepath    = filepath.Dir(b)+"/../.."
-	configRoute = basepath+"/config/"
-	filename 	= "config.toml"
-	jibConfig Config
 )
 
 type Config struct {

@@ -1,12 +1,21 @@
 package jib
 
 import (
-	"bufio"
 	"fmt"
+	"gopkg.in/src-d/go-git.v4"
 	"os"
 	"regexp"
 	"time"
 )
+
+type IssueIdentifierNotFoundError struct {
+	When time.Time
+	What string
+}
+
+func (e IssueIdentifierNotFoundError) Error() string  {
+	return e.What
+}
 
 type RemoteNotFoundError struct {
 	When time.Time
@@ -17,41 +26,39 @@ func (e RemoteNotFoundError) Error() string  {
 	return e.What
 }
 
-func GetBranchTaskNumber(branch string) (taskNumber string){
+func GetBranchTaskNumber(branch string) (taskNumber string, err error){
 	reg := regexp.MustCompile("[a-zA-Z]+[-]?[0-9]+")
 	taskNumber = reg.FindString(branch)
 
 	if taskNumber == "" {
-		fmt.Println("Could not find a task number within the current branch name.")
+		return taskNumber, IssueIdentifierNotFoundError{
+			time.Now(),
+			fmt.Sprintf("Could not find issue identifier in branch '%s'", branch),
+		}
+	}
+
+	return taskNumber, nil
+}
+
+func GetBranch() string {
+	wd, err := os.Getwd()
+	if nil != err {
+		fmt.Println("Something happened trying to detect working directory. Exiting...")
 		os.Exit(1)
 	}
 
-	return taskNumber
-}
-
-func GetBranch() (branch string){
-	dir, err := os.Getwd()
+	r, err := git.PlainOpen(wd+"/.git/")
 	if nil != err {
-		return branch
+		fmt.Println("Something happened trying to open git repo. Exiting...")
+		os.Exit(1)
 	}
-	if _, err := os.Stat(dir+"/.git/HEAD"); os.IsNotExist(err) {
-		fmt.Println(dir+"/.git/HEAD does not exist!")
-	}
-	file, err := os.Open(dir+"/.git/HEAD")
-	defer file.Close()
+
+	head, err :=r.Head()
+
 	if nil != err {
-		return branch
+		fmt.Println("Something happened trying to get head. Exiting...")
+		os.Exit(1)
 	}
-	var scanner = bufio.NewScanner(file)
 
-	scanner.Scan()
-	branch = scanner.Text()
-	return branch[16:]
-}
-
-func ExtractTaskNumber() (taskNumber string) {
-	branch := GetBranch()
-	taskNumber = GetBranchTaskNumber(branch)
-
-	return taskNumber
+	return string(head.Name())
 }

@@ -1,0 +1,9 @@
+┌─{{ Repeat "─" (len .Fields.Summary) }}─┐
+│ {{ .Fields.Summary }} │
+└─{{ Repeat "─" (len .Fields.Summary) }}─┘
+
+{{ Repeat " " (len "Status: ") }}┌─{{ Repeat "─" (len .Fields.Status.Name) }}─┐
+Status: │ {{.Fields.Status.GetColorFormattedName}} │
+{{ Repeat " " (len "Status: ") }}└─{{ Repeat "─" (len .Fields.Status.Name) }}─┘
+Reporter: {{.Fields.Reporter.DisplayName}} <{{.Fields.Reporter.EmailAddress}}>
+Assignee: {{.Fields.Assignee.DisplayName}} <{{.Fields.Assignee.EmailAddress}}>

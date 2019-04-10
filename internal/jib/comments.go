@@ -3,6 +3,7 @@ package jib
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
@@ -31,19 +32,14 @@ func (commentSection CommentSection) OutputToTerminal (writer io.Writer) {
 	funcMap := map[string]interface{}{
 		"Repeat": func(s string, count int) string { return strings.Repeat(s, count) },
 	}
-	t := template.Must(template.New("comments").Funcs(funcMap).Parse(
-		`
-------------
-| Comments |
-------------
-{{ range $comment := .Comments }}
-{{ $comment.Author.DisplayName }}
-{{ Repeat "-" (len $comment.Author.DisplayName) }}
-{{ $comment.Body }}
-{{ end }}
-`))
-	err := t.Execute(writer, commentSection)
+	b, err := ioutil.ReadFile(basepath+"/internal/jib/comments.txt.tmpl")
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	s := string(b)
 
+	err = template.Must(template.New("comments").Funcs(funcMap).Parse(s)).Execute(writer, commentSection)
 	if nil != err {
 		fmt.Println(err)
 		os.Exit(1)

@@ -24,19 +24,18 @@ func (*setup) Name() string {
 }
 
 func (*setup) Synopsis() string {
-	return "Configures a Jira/git integration."
+	return "Allow manipulation of JIB instances."
 }
 
 func (*setup) Usage() string {
-	return `jib setup [-port <port>] [-username <username>] [-main-branch <main-branch>] <host>:
-	Configures a Jira/git integration. If a username is provided, the user will be prompted to
-	enter a password.
+	return `jib setup [-port <port>] [-username <username>] [-main-branch <main-branch>]
+[-host <host>][-list][-remove]
 `
 }
 
 func (setup *setup) SetFlags(f *flag.FlagSet) {
 	f.BoolVar(&setup.List, "list", false, "List all configured instances.")
-	f.BoolVar(&setup.Remove, "remove", false, "Remove a configured instance based on the host provided.")
+	f.BoolVar(&setup.Remove, "remove", false, "Remove the configured instance.")
 
 	f.StringVar(&setup.Instance.Host, "host", "", "JIRA host.")
 
@@ -48,7 +47,6 @@ func (setup *setup) SetFlags(f *flag.FlagSet) {
 	setup.Instance.Port = uint16(port)
 
 	f.StringVar(&setup.Instance.Username, "username", "", "JIRA username.")
-	f.StringVar(&setup.RemoteName, "remote-name", "origin", "The name given to the remote repository within the local git configuration.")
 	f.StringVar(&setup.Instance.MainBranch, "main-branch", "master", "Main branch for git repository.")
 }
 
@@ -69,11 +67,6 @@ func (setup *setup) listInstances ()  {
 }
 
 func (setup *setup) removeInstance () {
-	if 0 == len(setup.RemoteName) {
-		fmt.Println("No remote was provided. Please specify remote with -remote-name.")
-		os.Exit(1)
-	}
-
 	removeInstance()
 }
 
@@ -84,10 +77,6 @@ func (setup *setup) addInstance () {
 	}
 	if 0 == len(setup.Instance.Username) {
 		fmt.Println("No username was provided for JIRA. Please specify username with -username.")
-		os.Exit(1)
-	}
-	if 0 == len(setup.RemoteName) {
-		fmt.Println("No remote was provided. Please specify remote with -remote-name.")
 		os.Exit(1)
 	}
 
