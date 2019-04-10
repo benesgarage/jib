@@ -1,0 +1,9 @@
+
+┌──────────┐
+│ Comments │
+└──────────┘
+{{ range $comment := .Comments }}
+    {{ $comment.Author.DisplayName }}
+    {{ Repeat "─" (len $comment.Author.DisplayName) }}
+    {{ $comment.Body }}
+{{ end }}
