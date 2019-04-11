@@ -9,7 +9,7 @@
 [[Instances]]
   Host = "http://tasks.trivago.com"
   Location = "/Users/kbenevento/Projects/invoicing-V2"
-  MainBranch = "master"
+  MainBranch = "release"
   Port = 80
   Username = "kbenevento"
 

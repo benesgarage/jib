@@ -1,0 +1,11 @@
+{
+  "Instances": [
+    {
+      "Origin": "ssh://git@git.trivago.trv/pse/invoicing.git",
+      "Host": "http://tasks.trivago.com",
+      "Port": 80,
+      "Username": "kbenevento",
+      "MainBranch": "release"
+    }
+  ]
+}
