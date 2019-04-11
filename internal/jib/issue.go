@@ -23,6 +23,7 @@ type Fields struct {
 	Reporter Reporter
 	Assignee Assignee
 	Status Status
+	IssueType IssueType
 }
 
 type Reporter struct {
@@ -38,6 +39,10 @@ type Assignee struct {
 type Status struct {
 	Name string
 	StatusCategory StatusCategory
+}
+
+type IssueType struct {
+	Name string
 }
 
 type StatusCategory struct {
