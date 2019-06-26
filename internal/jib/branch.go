@@ -4,7 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/benesgarage/jib/jira_client"
 	"github.com/google/subcommands"
+	"github.com/zalando/go-keyring"
 	"os"
 )
 
@@ -54,8 +56,22 @@ func (setup *branch) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 		}
 	}
 
-	issueIdentifier := f.Arg(0)
-	issue := GetIssue(instance, issueIdentifier)
+	issueID := f.Arg(0)
+
+	password, err := keyring.Get(instance.Host, instance.Username)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	client := jira_client.BasicAuthClient{
+		Host:instance.Host,
+		Username:instance.Username,
+		Password:password,
+	}
+
+	issue := client.ParseIssue(client.RequestIssue(issueID))
 	branchName := CreateBranchFromIssue(instance, issue)
 	CheckoutBranch(branchName)
 

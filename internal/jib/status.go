@@ -5,8 +5,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/benesgarage/jib/jira_client"
 	"github.com/google/subcommands"
+	"github.com/zalando/go-keyring"
+	"io/ioutil"
 	"os"
+	"strings"
+	"text/template"
 )
 
 type status struct {
@@ -68,15 +73,52 @@ func (status *status) Execute (_ context.Context, f *flag.FlagSet, _ ...interfac
 		os.Exit(1)
 	}
 
-	issue := GetIssue(instance, status.IssueIdentifier)
-	writer := bufio.NewWriter(os.Stdout)
-	issue.OutputToTerminal(writer)
+	password, err := keyring.Get(instance.Host, instance.Username)
 
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	client := jira_client.BasicAuthClient{
+		Host:instance.Host,
+		Username:instance.Username,
+		Password:password,
+	}
+
+	funcMap := map[string]interface{}{
+		"Repeat": func(s string, count int) string { return strings.Repeat(s, count) },
+	}
+
+	issue := client.ParseIssue(client.RequestIssue(status.IssueIdentifier))
+	writer := bufio.NewWriter(os.Stdout)
+	b, err := ioutil.ReadFile(basepath+"/internal/jib/issue.txt.tmpl")
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	s := string(b)
+
+	err = template.Must(template.New("summary").Funcs(funcMap).Parse(s)).Execute(writer, issue)
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	if true == status.Comments {
-		comments := GetCommentSection(instance, status.IssueIdentifier)
-		comments.OutputToTerminal(writer)
-	}
+		commentSection := client.ParseCommentSection(client.RequestCommentSection(status.IssueIdentifier))
+		b, err := ioutil.ReadFile(basepath+"/internal/jib/comments.txt.tmpl")
+		if nil != err {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		s := string(b)
+
+		err = template.Must(template.New("comments").Funcs(funcMap).Parse(s)).Execute(writer, commentSection)
+		if nil != err {
+			fmt.Println(err)
+			os.Exit(1)
+		}	}
 
 	err = writer.Flush()
 

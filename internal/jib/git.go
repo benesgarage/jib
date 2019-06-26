@@ -2,6 +2,7 @@ package jib
 
 import (
 	"fmt"
+	"github.com/benesgarage/jib/jira_client"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"log"
@@ -67,7 +68,7 @@ func GetBranch() string {
 	return string(head.Name())
 }
 
-func CreateBranchFromIssue(instance Instance, issue Issue) string {
+func CreateBranchFromIssue(instance Instance, issue jira_client.Issue) string {
 	wd, err := os.Getwd()
 	if nil != err {
 		fmt.Println("Something happened trying to detect working directory. Exiting...")
