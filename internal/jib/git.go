@@ -5,12 +5,10 @@ import (
 	"github.com/benesgarage/jib/jira_client"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
-	"log"
 	"os"
 	"regexp"
 	"strings"
 	"time"
-	"unicode"
 )
 
 type IssueIdentifierNotFoundError struct {
@@ -135,25 +133,17 @@ func CheckoutBranch(branchName string) {
 	}
 }
 
-func removeNonAlphanumeric (string string) string {
-	reg, err := regexp.Compile("[^a-zA-Z0-9\\s-_]+")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return reg.ReplaceAllString(string, "")
-}
 
-func splitSummary(summary string) string {
-	splittingPos := 0
-	for pos, char := range summary[0:25] {
-		if unicode.IsSpace(char) {
-			splittingPos = pos
-		}
+func GetRepositoryFromWD() (*git.Repository, error) {
+	wd, err := os.Getwd()
+	if nil != err {
+		return nil, err
 	}
 
-	if 0 == splittingPos {
-		return summary[0:25]
+	r, err := git.PlainOpen(wd)
+	if nil != err {
+		return nil, err
 	}
 
-	return summary[0:splittingPos]
+	return r, nil
 }

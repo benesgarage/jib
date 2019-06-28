@@ -256,6 +256,7 @@
     "github.com/zalando/go-keyring",
     "golang.org/x/crypto/ssh/terminal",
     "gopkg.in/src-d/go-git.v4",
+    "gopkg.in/src-d/go-git.v4/config",
     "gopkg.in/src-d/go-git.v4/plumbing",
   ]
   solver-name = "gps-cdcl"
