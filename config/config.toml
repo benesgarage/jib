@@ -19,3 +19,10 @@
   MainBranch = "release"
   Port = 80
   Username = "kbenevento"
+
+[[Instances]]
+  Host = "http://tasks.trivago.com"
+  Location = "/home/benes/Work/Projects/invoicing"
+  MainBranch = "release"
+  Port = 80
+  Username = "kbenevento"

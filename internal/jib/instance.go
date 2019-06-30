@@ -32,7 +32,7 @@ func addInstance (instance Instance) () {
 	err = keyring.Set(instance.Host, instance.Username, string(password))
 
 	if nil != err {
-		fmt.Println(err)
+		fmt.Println("Something happened trying to save the password: " + err.Error())
 		os.Exit(1)
 	}
 }

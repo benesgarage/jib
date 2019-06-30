@@ -87,11 +87,7 @@ func CreateBranchFromIssueID(issueID string, instance Instance) int {
 		fmt.Println("Something happened trying to get the git repository: "+err.Error())
 		return 1
 	}
-	mainRef, err := repository.Reference(plumbing.ReferenceName("refs/heads/" + instance.MainBranch), false)
-	if nil != err {
-		fmt.Println("Something happened trying to get the main branch ref: "+err.Error())
-		return 1
-	}
+
 
 	branchName := GenerateBranchName(issue)
 
@@ -101,7 +97,13 @@ func CreateBranchFromIssueID(issueID string, instance Instance) int {
 		fmt.Println("Something happened trying to get the git worktree: "+err.Error())
 		return 1
 	}
-	// Checkout main branch
+
+	mainRef, err := repository.Reference(plumbing.ReferenceName("refs/heads/" + instance.MainBranch), false)
+	if nil != err {
+		fmt.Println("Somethin happened trying to get the main branch ref: " + err.Error())
+		return 1
+	}
+
 	err = worktree.Checkout(&git.CheckoutOptions{
 		Hash: mainRef.Hash(),
 		Create: false,
@@ -109,7 +111,7 @@ func CreateBranchFromIssueID(issueID string, instance Instance) int {
 	})
 
 	if nil != err {
-		fmt.Println("Something happened trying to checkout the main branch: "+err.Error())
+		fmt.Println("Something happened trying to checkout main branch: " + err.Error())
 		return 1
 	}
 
@@ -132,7 +134,7 @@ func CreateBranchFromIssueID(issueID string, instance Instance) int {
 	})
 
 	if nil != err {
-		fmt.Println("Something happened trying to checkout the new branch: "+err.Error())
+		fmt.Println("Something happened trying to get the main branch ref: "+err.Error())
 		return 1
 	}
 
