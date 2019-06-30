@@ -39,7 +39,20 @@ the JIRA host for the specific issue identifier.
 }
 
 func (status *status) SetFlags (f *flag.FlagSet) {
-	defaultIssueIdentifier, err := GetBranchTaskNumber(GetBranch())
+	r, err := GetRepositoryFromWD()
+	if nil != err {
+		fmt.Println("Something happened trying to open git repo: " + err.Error())
+		os.Exit(1)
+	}
+
+	head, err :=r.Head()
+
+	if nil != err {
+		fmt.Println("Something happened trying to get the repo head: " + err.Error())
+		os.Exit(1)
+	}
+
+	defaultIssueIdentifier, err := GetBranchTaskNumber(string(head.Name()))
 
 	if _, ok := err.(*IssueIdentifierNotFoundError); true == ok {
 		defaultIssueIdentifier = ""
@@ -53,7 +66,7 @@ func (status *status) Execute (_ context.Context, f *flag.FlagSet, _ ...interfac
 	wd, err := os.Getwd()
 
 	if nil != err {
-		fmt.Println("Something happened trying to detect working directory. Exiting...")
+		fmt.Println("Something happened trying to detect working directory: " + err.Error())
 		os.Exit(1)
 	}
 	instance, err := jibConfig.GetInstance(wd)
