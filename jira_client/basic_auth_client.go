@@ -18,7 +18,7 @@ func (client BasicAuthClient) DoAuthorized (req *http.Request) (*http.Response, 
 	return client.Do(req)
 }
 
-func (client BasicAuthClient) redirectFuncPolicy (req *http.Request, via []*http.Request) error{
+func (client BasicAuthClient) redirectFuncPolicy (req *http.Request, via []*http.Request) error {
 	lastRequest := via[len(via)-1]
 	// Copy the headers from last request
 	req.Header = lastRequest.Header

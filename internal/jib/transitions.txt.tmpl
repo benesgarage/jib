@@ -1,0 +1,7 @@
+
+┌─────────────┐
+│ Transitions │
+└─────────────┘
+{{ range $transition := .Transitions }}┌{{ Repeat "─" (Sum (len $transition.Name) 2) }}┐{{ end }}
+{{ range $transition := .Transitions }}│ {{ $transition.Name }} │{{ end }}
+{{ range $transition := .Transitions }}└{{ Repeat "─" (Sum (len $transition.Name) 2) }}┘{{ end }}

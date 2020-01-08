@@ -17,6 +17,8 @@ import (
 type status struct {
 	IssueIdentifier string
 	Comments bool
+	Transition string
+	ShowTransitions bool
 }
 
 func NewStatus() *status {
@@ -32,7 +34,7 @@ func (*status) Synopsis() string {
 }
 
 func (*status) Usage() string {
-	return `jib status [-issue <issue-number>] [-comments]
+	return `jib status [-issue <issue-number>] [-comments] [-transition] [-show-transitions]
 Defaults to finding the issue number within the current branch. If -issue is specified, will query
 the JIRA host for the specific issue identifier.
 `
@@ -60,6 +62,8 @@ func (status *status) SetFlags (f *flag.FlagSet) {
 
 	f.StringVar(&status.IssueIdentifier, "issue", defaultIssueIdentifier, "Provide a specific issue identifier to query.")
 	f.BoolVar(&status.Comments, "comments", false, "Show issue comments.")
+	f.StringVar(&status.Transition, "transition", "", "Transition issue to given status. Can be the status name or ID.")
+	f.BoolVar(&status.ShowTransitions, "show-transitions", false, "Show possible transitions for the issue.")
 }
 
 func (status *status) Execute (_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
@@ -101,6 +105,28 @@ func (status *status) Execute (_ context.Context, f *flag.FlagSet, _ ...interfac
 
 	funcMap := map[string]interface{}{
 		"Repeat": func(s string, count int) string { return strings.Repeat(s, count) },
+		"Sum": func(nums ...int) int {
+			total := 0
+			for _,num := range nums {
+				total += num
+			}
+			return total
+		},
+	}
+
+	if "" != status.Transition {
+		transition, found := client.FindTransitionByName(
+			client.RequestIssueTransitions(status.IssueIdentifier),
+			status.Transition,
+		)
+
+		if false == found {
+			fmt.Println("The transition "+status.Transition+" is not available for this issue's current status.")
+		}
+
+		if true == found {
+			client.PostTransition(status.IssueIdentifier, transition.ID)
+		}
 	}
 
 	issue := client.ParseIssue(client.RequestIssue(status.IssueIdentifier))
@@ -131,7 +157,25 @@ func (status *status) Execute (_ context.Context, f *flag.FlagSet, _ ...interfac
 		if nil != err {
 			fmt.Println(err)
 			os.Exit(1)
-		}	}
+		}
+	}
+
+	if true == status.ShowTransitions {
+		issueTransitions := client.ParseIssueTransitions(client.RequestIssueTransitions(status.IssueIdentifier))
+		b, err := ioutil.ReadFile(basepath+"/internal/jib/transitions.txt.tmpl")
+
+		if nil != err {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		s := string(b)
+		err = template.Must(template.New("transitions").Funcs(funcMap).Parse(s)).Execute(writer, issueTransitions)
+		if nil != err {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+	}
 
 	err = writer.Flush()
 

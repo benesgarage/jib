@@ -1,9 +1,9 @@
-┌─{{ Repeat "─" (len .Fields.Summary) }}─┐
+┌─Summary{{ Repeat "─" ( Sum (len .Fields.Summary) -7) }}─┐
 │ {{ .Fields.Summary }} │
-└─{{ Repeat "─" (len .Fields.Summary) }}─┘
-
-{{ Repeat " " (len "Status: ") }}┌─{{ Repeat "─" (len .Fields.Status.Name) }}─┐
-Status: │ {{.Fields.Status.GetColorFormattedName}} │
-{{ Repeat " " (len "Status: ") }}└─{{ Repeat "─" (len .Fields.Status.Name) }}─┘
+└─{{ Repeat "─" (Sum (len .Fields.Summary)) }}─┘
+{{ $count := len .Fields.Status.Name }}{{ if lt $count 6 }}{{ $count = 6 }}{{end}}
+┌─Status{{ Repeat "─" (Sum $count -6) }}─┐
+│ {{.Fields.Status.GetColorFormattedName}} │
+└─{{ Repeat "─" $count }}─┘
 Reporter: {{.Fields.Reporter.DisplayName}} <{{.Fields.Reporter.EmailAddress}}>
 Assignee: {{.Fields.Assignee.DisplayName}} <{{.Fields.Assignee.EmailAddress}}>

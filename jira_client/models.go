@@ -4,6 +4,20 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+type UpdateIssue struct {
+	Transition Transition
+}
+
+type IssueTransitions struct {
+	Transitions []Transition
+}
+
+type Transition struct {
+	ID string
+	Name string
+	To Status
+}
+
 type CommentSection struct {
 	Total int
 	Comments []Comment
@@ -51,6 +65,7 @@ type Assignee struct {
 
 type Status struct {
 	Name string
+	ID string
 	StatusCategory StatusCategory
 }
 

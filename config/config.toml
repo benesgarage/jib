@@ -1,28 +1,35 @@
 
 [[Instances]]
-  Host = "http://tasks.trivago.com"
+  Host = "https://tasks.trivago.com"
   Location = "/Users/kbenevento/go/src/github.com/benesgarage/jib"
   MainBranch = "master"
   Port = 80
   Username = "kbenevento"
 
 [[Instances]]
-  Host = "http://tasks.trivago.com"
+  Host = "https://tasks.trivago.com"
   Location = "/Users/kbenevento/Projects/trvinvoice-buzz-api"
   MainBranch = "master"
   Port = 80
   Username = "kbenevento"
 
 [[Instances]]
-  Host = "http://tasks.trivago.com"
+  Host = "https://tasks.trivago.com"
   Location = "/Users/kbenevento/Projects/invoicing-V2"
+  MainBranch = "master"
+  Port = 80
+  Username = "kbenevento"
+
+[[Instances]]
+  Host = "https://tasks.trivago.com"
+  Location = "/home/benes/Work/Projects/invoicing"
   MainBranch = "release"
   Port = 80
   Username = "kbenevento"
 
 [[Instances]]
-  Host = "http://tasks.trivago.com"
-  Location = "/home/benes/Work/Projects/invoicing"
+  Host = "https://tasks.trivago.com"
+  Location = "/Users/kbenevento/Projects/invoice-be"
   MainBranch = "release"
   Port = 80
   Username = "kbenevento"
