@@ -102,3 +102,33 @@ func (client BasicAuthClient) PostTransition (issueID string, transitionID strin
 
 	return resp
 }
+
+func (client BasicAuthClient) GetActivity (username string, startDate string, endDate string) *http.Response {
+	url := fmt.Sprintf(
+		"%s/plugins/servlet/streams?maxResults=100&streams=user+IS+%s&streams=update-date+BETWEEN+%s+%s",
+		client.Host,
+		username,
+		startDate,
+		endDate,
+		)
+
+	req, err := http.NewRequest("GET", url, nil)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if req == nil {
+		os.Exit(1)
+	}
+
+	resp, err := client.DoAuthorized(req)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	return resp
+}

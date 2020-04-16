@@ -2,7 +2,9 @@ package jira_client
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -42,6 +44,24 @@ func (client BasicAuthClient) ParseIssueTransitions (response *http.Response) (i
 	}
 
 	return issueTransitions
+}
+
+func (client BasicAuthClient) ParseActivity (response *http.Response) (feed Feed) {
+	data, err := ioutil.ReadAll(response.Body)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	err = xml.Unmarshal(data, &feed)
+
+	if nil != err {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	return feed
 }
 
 func (client BasicAuthClient) FindTransitionByName (response *http.Response, transitionName string) (transition Transition, found bool) {

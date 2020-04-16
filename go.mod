@@ -8,6 +8,7 @@ require (
 	github.com/gizak/termui v3.1.0+incompatible // indirect
 	github.com/godbus/dbus v0.0.0-20181101234600-2ff6f7ffd60f
 	github.com/google/subcommands v1.0.1
+	github.com/grokify/html-strip-tags-go v0.0.0-20200322061010-ea0c1cf2f119
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
 	github.com/kevinburke/ssh_config v0.0.0-20180830205328-81db2a75821e
 	github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e

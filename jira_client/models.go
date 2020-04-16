@@ -77,6 +77,24 @@ type StatusCategory struct {
 	ColorName string
 }
 
+type Feed struct {
+	Entry []Entry `xml:"entry"`
+}
+
+type Entry struct {
+	ID string `xml:"id"`
+	Title string `xml:"title"`
+	Author Authore `xml:"author"`
+	Updated string `xml:"updated"`
+}
+
+type Authore struct {
+	Name string `xml:"name"`
+	Email string `xml:"email"`
+	URI string `xml:"uri"`
+	Username string `xml:"username"`
+}
+
 // TODO: Move this? yes, move this
 func (status Status) GetColorFormattedName() (name string) {
 	if "blue-gray" == status.StatusCategory.ColorName {
